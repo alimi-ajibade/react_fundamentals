@@ -5,6 +5,7 @@ interface Props {
     maxChar?: number;
 }
 
+// My Solution to Expandable text excercise
 // const ExpandableText = ({ children, maxChar = 10 }: Props) => {
 //     const [charLength, setCharLength] = useState(maxChar);
 
@@ -29,6 +30,7 @@ interface Props {
 //     );
 // };
 
+// Moshes solution
 const ExpandableText = ({ children, maxChar = 10 }: Props) => {
     const [isExpanded, setIsExpanded] = useState(false);
 

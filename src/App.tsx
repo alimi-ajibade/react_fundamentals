@@ -215,48 +215,37 @@ import { useState } from "react";
 // }
 
 // Expandablle Component
-import ExpandableText from "./components/ExpandableText";
+// import ExpandableText from "./components/ExpandableText";
 
-function App() {
+// function App() {
+//     return (
+//         <ExpandableText maxChar={50}>
+//             Lorem ipsum dolor sit amet consectetur adipisicing elit. Dicta iure
+//             ullam asperiores facere debitis nam odio earum, optio numquam
+//             similique recusandae eveniet ab velit hic odit! Iure nihil nam
+//             quidem voluptatibus cumque tempora deserunt labore? Eos, unde?
+//             Corrupti id fuga corporis asperiores, ipsa ratione expedita cum
+//             autem. Laborum nobis unde earum deleniti adipisci iusto voluptates,
+//             commodi ex illo, enim fugiat quae aut error nihil sint eius incidunt
+//             dolores voluptatem repellendus odio nulla non minima, praesentium
+//             ea. Error autem, repudiandae eveniet perspiciatis ab dolore nobis
+//             assumenda adipisci exercitationem ipsum reprehenderit laboriosam
+//             dolores incidunt vero veritatis nemo perferendis dolorum saepe
+//             accusantium sint! Lorem ipsum dolor sit amet, consectetur
+//             adipisicing elit. Unde sint maxime nam et saepe modi ullam quam
+//             neque ipsum delectus eveniet quasi vero perferendis ratione quidem.
+//         </ExpandableText>
+//     );
+// }
+
+import Form from "./components/Form";
+
+const App = () => {
     return (
-        <ExpandableText maxChar={50}>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Dicta iure
-            ullam asperiores facere debitis nam odio earum, optio numquam
-            similique recusandae eveniet ab velit hic odit! Iure nihil nam
-            quidem voluptatibus cumque tempora deserunt labore? Eos, unde?
-            Corrupti id fuga corporis asperiores, ipsa ratione expedita cum
-            autem. Laborum nobis unde earum deleniti adipisci iusto voluptates,
-            commodi ex illo, enim fugiat quae aut error nihil sint eius incidunt
-            dolores voluptatem repellendus odio nulla non minima, praesentium
-            ea. Error autem, repudiandae eveniet perspiciatis ab dolore nobis
-            assumenda adipisci exercitationem ipsum reprehenderit laboriosam
-            dolores incidunt vero veritatis nemo perferendis dolorum saepe
-            accusantium sint! Lorem ipsum dolor sit amet, consectetur
-            adipisicing elit. Unde sint maxime nam et saepe modi ullam quam
-            neque ipsum delectus eveniet quasi vero perferendis ratione quidem,
-            repellendus minima iure dolorem voluptatum est deserunt? Suscipit
-            reiciendis quibusdam amet excepturi iure cumque autem? Sapiente, est
-            inventore? Impedit alias excepturi officiis quaerat nulla soluta
-            reprehenderit esse provident illo suscipit eius id repellendus
-            beatae non numquam laudantium cumque laborum ducimus, similique
-            voluptatum nostrum blanditiis tempora nam ut. Magni eligendi officia
-            molestiae in quia dolorum fugiat, fugit reiciendis deleniti
-            repellendus libero beatae, reprehenderit dolore, rerum porro neque
-            odit repellat veniam quos dicta sunt eum est. Dignissimos quidem
-            tenetur error laudantium nemo itaque, reprehenderit soluta facilis
-            perferendis fugit quaerat, velit dolorum nihil pariatur saepe porro
-            illo neque quis doloribus odit totam voluptatibus! Culpa totam hic
-            quam, aliquam deserunt ratione tempore magnam assumenda, facere,
-            natus consequuntur dicta ullam maxime reiciendis repudiandae in.
-            Natus odio perspiciatis amet deleniti, quo adipisci facere tempora
-            omnis voluptatibus doloribus, rerum totam error fuga odit vitae
-            obcaecati at minus! Facilis unde, quibusdam dignissimos libero
-            tempora accusamus dolor minima nemo ullam quasi asperiores
-            reprehenderit dolore labore atque quo ducimus voluptatum voluptates
-            obcaecati dolorum architecto. Quasi voluptates consequuntur modi
-            eligendi quaerat pariatur quam? Dolorum, libero.
-        </ExpandableText>
+        <div>
+            <Form />
+        </div>
     );
-}
+};
 
 export default App;
