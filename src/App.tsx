@@ -238,12 +238,69 @@ import { useState } from "react";
 //     );
 // }
 
-import Form from "./components/Form";
+// import Form from "./components/Form";
+
+// const App = () => {
+//     return (
+//         <div>
+//             <Form />
+//         </div>
+//     );
+// };
+
+import { FieldValues } from "react-hook-form";
+import { ChangeEvent } from "react";
+import ExpenseTrackerForm from "./components/ExpenseTrackerForm";
+import ExpenseTrackerList from "./components/ExpenseTrackerList";
+
+interface Expense {
+    description: string;
+    amount: number;
+    category: string;
+}
 
 const App = () => {
+    const [expenses, setExpense] = useState([
+        { description: "", amount: 0, category: "" },
+    ]);
+
+    const [filter, setFilter] = useState("All Categories");
+
+    const handleSubmit = (data: FieldValues) => {
+        if (data !== null)
+            setExpense([
+                ...expenses,
+                {
+                    description: data.description,
+                    amount: data.amount,
+                    category: data.category,
+                },
+            ]);
+    };
+
+    const handleDelete = (expense: Expense) => {
+        setExpense([
+            ...expenses.filter(
+                (item) => item.description !== expense.description
+            ),
+        ]);
+    };
+
+    const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
+        setFilter(event.target.value);
+    };
+
     return (
         <div>
-            <Form />
+            <ExpenseTrackerForm
+                onSubmit={handleSubmit}
+                onChange={handleChange}
+            />
+            <ExpenseTrackerList
+                expenses={expenses.slice(1)}
+                filter={filter}
+                onDelete={handleDelete}
+            />
         </div>
     );
 };
