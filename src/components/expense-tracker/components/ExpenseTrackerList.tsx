@@ -1,31 +1,19 @@
 interface Expense {
+    id: number;
     description: string;
     amount: number;
     category: string;
 }
 
 interface Props {
-    filter: string;
-    expenses: { description: string; amount: number; category: string }[];
-    onDelete: (expense: Expense) => void;
+    expenses: Expense[];
+    onDelete: (id: number) => void;
 }
 
-const ExpenseTrackerList = ({ filter, expenses, onDelete }: Props) => {
-    const tableData =
-        filter === "All Categories"
-            ? expenses
-            : expenses.filter((expense) => expense.category === filter);
-
-    const totalExpense = () => {
-        let total = 0;
-        tableData.forEach((item) => (total += item.amount));
-
-        return total;
-    };
-
+const ExpenseTrackerList = ({ expenses, onDelete }: Props) => {
     return (
         <div className="mb-3 mt-3 container-sm">
-            {tableData.length !== 0 && (
+            {expenses.length !== 0 && (
                 <table className="table table-bordered mt-5">
                     <thead>
                         <tr>
@@ -37,7 +25,7 @@ const ExpenseTrackerList = ({ filter, expenses, onDelete }: Props) => {
                     </thead>
 
                     <tbody>
-                        {tableData.map((expense, index) => (
+                        {expenses.map((expense, index) => (
                             <tr key={index}>
                                 <td>{expense.description}</td>
                                 <td>${expense.amount}</td>
@@ -46,18 +34,28 @@ const ExpenseTrackerList = ({ filter, expenses, onDelete }: Props) => {
                                     <button
                                         type="button"
                                         className="btn btn-danger"
-                                        onClick={() => onDelete(expense)}>
+                                        onClick={() => onDelete(expense.id)}>
                                         Delete
                                     </button>
                                 </td>
                             </tr>
                         ))}
+                    </tbody>
 
+                    <tfoot>
                         <tr>
                             <td>Total</td>
-                            <td>${totalExpense()}</td>
+                            <td>
+                                $
+                                {expenses.reduce(
+                                    (acc, expense) => expense.amount + acc,
+                                    0
+                                )}
+                            </td>
+                            <td></td>
+                            <td></td>
                         </tr>
-                    </tbody>
+                    </tfoot>
                 </table>
             )}
         </div>

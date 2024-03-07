@@ -1,12 +1,7 @@
-import { ChangeEvent } from "react";
-import { FieldValues, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-interface Props {
-    onSubmit: (data: FieldValues) => void;
-    onChange: (event: ChangeEvent<HTMLSelectElement>) => void;
-}
+import expenseCategories from "../categories";
 
 const schema = z.object({
     description: z
@@ -15,13 +10,18 @@ const schema = z.object({
     amount: z
         .number({ invalid_type_error: "Amount is required" })
         .min(0, { message: "Amount must be more than 0" }),
-
-    category: z.string().min(3, { message: "Description is required" }),
+    category: z.enum(expenseCategories, {
+        errorMap: () => ({ message: "Category is required" }),
+    }),
 });
 
 type FormData = z.infer<typeof schema>;
 
-const ExpenseTrackerForm = ({ onSubmit, onChange }: Props) => {
+interface Props {
+    onSubmit: (data: FormData) => void;
+}
+
+const ExpenseTrackerForm = ({ onSubmit }: Props) => {
     const {
         register,
         handleSubmit,
@@ -32,7 +32,7 @@ const ExpenseTrackerForm = ({ onSubmit, onChange }: Props) => {
     return (
         <div className="container-sm">
             <form
-                onSubmit={handleSubmit((data: FieldValues) => {
+                onSubmit={handleSubmit((data) => {
                     onSubmit(data);
                     reset();
                 })}>
@@ -77,12 +77,13 @@ const ExpenseTrackerForm = ({ onSubmit, onChange }: Props) => {
                     <select
                         id="category"
                         className="form-select"
-                        defaultValue=" "
                         {...register("category")}>
                         <option value=" "> </option>
-                        <option value="Groceries">Groceries</option>
-                        <option value="Utilities">Utilities</option>
-                        <option value="Entertainment">Entertainment</option>
+                        {expenseCategories.map((category) => (
+                            <option value={category} key={category}>
+                                {category}
+                            </option>
+                        ))}
                     </select>
 
                     {errors.category && (
@@ -94,17 +95,6 @@ const ExpenseTrackerForm = ({ onSubmit, onChange }: Props) => {
                     Submit
                 </button>
             </form>
-
-            <select
-                id="category"
-                className="form-select mt-5"
-                defaultValue="All category"
-                onChange={onChange}>
-                <option value="All Categories">All Categories</option>
-                <option value="Groceries">Groceries</option>
-                <option value="Utilities">Utilities</option>
-                <option value="Entertainment">Entertainment</option>
-            </select>
         </div>
     );
 };

@@ -248,57 +248,50 @@ import { useState } from "react";
 //     );
 // };
 
+import ExpenseTrackerForm from "./components/expense-tracker/components/ExpenseTrackerForm";
+import ExpenseTrackerList from "./components/expense-tracker/components/ExpenseTrackerList";
+import ExpenseTrackerFilter from "./components/expense-tracker/components/ExpenseTrackerFilter";
 import { FieldValues } from "react-hook-form";
-import { ChangeEvent } from "react";
-import ExpenseTrackerForm from "./components/ExpenseTrackerForm";
-import ExpenseTrackerList from "./components/ExpenseTrackerList";
-
-interface Expense {
-    description: string;
-    amount: number;
-    category: string;
-}
 
 const App = () => {
     const [expenses, setExpense] = useState([
-        { description: "", amount: 0, category: "" },
-    ]);
+        { id: 0, description: "", amount: 0, category: "" },
+    ]); // I don't want to pass an inital data
+    const [selectedCategory, setSelectedCategory] = useState("");
 
-    const [filter, setFilter] = useState("All Categories");
+    const filteredExpenses = selectedCategory
+        ? expenses
+              .slice(1)
+              .filter((expense) => expense.category === selectedCategory)
+        : expenses.slice(1);
 
-    const handleSubmit = (data: FieldValues) => {
-        if (data !== null)
+    const handleSubmit = (expense: FieldValues) => {
+        if (expense !== null)
             setExpense([
                 ...expenses,
                 {
-                    description: data.description,
-                    amount: data.amount,
-                    category: data.category,
+                    id: expenses.length + 1,
+                    description: expense.description,
+                    amount: expense.amount,
+                    category: expense.category,
                 },
             ]);
     };
 
-    const handleDelete = (expense: Expense) => {
-        setExpense([
-            ...expenses.filter(
-                (item) => item.description !== expense.description
-            ),
-        ]);
+    const handleDelete = (id: number) => {
+        setExpense([...expenses.filter((item) => item.id !== id)]);
     };
 
-    const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
-        setFilter(event.target.value);
+    const handleChangeCategory = (category: string) => {
+        setSelectedCategory(category);
     };
 
     return (
         <div>
-            <ExpenseTrackerForm
-                onSubmit={handleSubmit}
-                onChange={handleChange}
-            />
+            <ExpenseTrackerForm onSubmit={handleSubmit} />
+            <ExpenseTrackerFilter onChangeCategory={handleChangeCategory} />
             <ExpenseTrackerList
-                expenses={expenses.slice(1)}
-                filter={filter}
+                expenses={filteredExpenses}
                 onDelete={handleDelete}
             />
         </div>
