@@ -1,7 +1,6 @@
+import { useEffect, useRef, useState } from "react";
 // import ListGroup from "./components/ListGroup";
 // import "./App.css";
-
-import { useState } from "react";
 
 // function App() {
 //     let anime_character = ["Asta", "Yuri", "Naruto", "Eren", "Sung Jin-woo"];
@@ -248,53 +247,141 @@ import { useState } from "react";
 //     );
 // };
 
-import ExpenseTrackerForm from "./components/expense-tracker/components/ExpenseTrackerForm";
-import ExpenseTrackerList from "./components/expense-tracker/components/ExpenseTrackerList";
-import ExpenseTrackerFilter from "./components/expense-tracker/components/ExpenseTrackerFilter";
-import { FieldValues } from "react-hook-form";
+// Expense Tracker Project
+// import ExpenseTrackerForm from "./components/expense-tracker/components/ExpenseTrackerForm";
+// import ExpenseTrackerList from "./components/expense-tracker/components/ExpenseTrackerList";
+// import ExpenseTrackerFilter from "./components/expense-tracker/components/ExpenseTrackerFilter";
+// import { FieldValues } from "react-hook-form";
+
+// interface Expense {
+//     id: number;
+//     description: string;
+//     amount: number;
+//     category: string;
+// }
+
+// const App = () => {
+//     const [expenses, setExpense] = useState<Expense[]>([]);
+//     const [selectedCategory, setSelectedCategory] = useState("");
+
+//     const filteredExpenses = selectedCategory
+//         ? expenses.filter((expense) => expense.category === selectedCategory)
+//         : expenses;
+
+//     const handleSubmit = (expense: FieldValues) => {
+//         if (expense !== null)
+//             setExpense([
+//                 ...expenses,
+//                 {
+//                     id: expenses.length + 1,
+//                     description: expense.description,
+//                     amount: expense.amount,
+//                     category: expense.category,
+//                 },
+//             ]);
+//     };
+
+//     const handleDelete = (id: number) => {
+//         setExpense([...expenses.filter((item) => item.id !== id)]);
+//     };
+
+//     const handleChangeCategory = (category: string) => {
+//         setSelectedCategory(category);
+//     };
+
+//     return (
+//         <div>
+//             <ExpenseTrackerForm onSubmit={handleSubmit} />
+//             <ExpenseTrackerFilter onChangeCategory={handleChangeCategory} />
+//             <ExpenseTrackerList
+//                 expenses={filteredExpenses}
+//                 onDelete={handleDelete}
+//             />
+//         </div>
+//     );
+// };
+
+import userServices, { User } from "./services/user-services";
+import useUsers from "./hooks/useUser";
 
 const App = () => {
-    const [expenses, setExpense] = useState([
-        { id: 0, description: "", amount: 0, category: "" },
-    ]); // I don't want to pass an inital data
-    const [selectedCategory, setSelectedCategory] = useState("");
+    const { users, isLoading, error, setUsers, setError } = useUsers();
 
-    const filteredExpenses = selectedCategory
-        ? expenses
-              .slice(1)
-              .filter((expense) => expense.category === selectedCategory)
-        : expenses.slice(1);
+    const deleteUser = (user: User) => {
+        const originalUsers = users;
+        setUsers([...users.filter((item) => item.id !== user.id)]);
 
-    const handleSubmit = (expense: FieldValues) => {
-        if (expense !== null)
-            setExpense([
-                ...expenses,
-                {
-                    id: expenses.length + 1,
-                    description: expense.description,
-                    amount: expense.amount,
-                    category: expense.category,
-                },
-            ]);
+        userServices.delete(user.id).catch((err) => {
+            setError(err.message);
+            setUsers([...originalUsers]);
+        });
     };
 
-    const handleDelete = (id: number) => {
-        setExpense([...expenses.filter((item) => item.id !== id)]);
+    const addUser = () => {
+        const originalUsers = users;
+        const newUser: User = {
+            id: 0,
+            name: "David",
+        };
+        setUsers([newUser, ...users]);
+
+        userServices
+            .create(newUser)
+            .then(({ data: savedUser }) => setUsers([savedUser, ...users]))
+            .catch((err) => {
+                setError(err.message);
+                setUsers([...originalUsers]);
+            });
     };
 
-    const handleChangeCategory = (category: string) => {
-        setSelectedCategory(category);
+    const updateUser = (user: User) => {
+        const originalUsers = [...users];
+
+        const updatedUser = { ...user, name: user.name + "!" };
+        setUsers(users.map((u) => (u.id === user.id ? updatedUser : u)));
+
+        userServices.update(updatedUser).catch((err) => {
+            setError(err.message);
+            setUsers([...originalUsers]);
+        });
     };
 
     return (
-        <div>
-            <ExpenseTrackerForm onSubmit={handleSubmit} />
-            <ExpenseTrackerFilter onChangeCategory={handleChangeCategory} />
-            <ExpenseTrackerList
-                expenses={filteredExpenses}
-                onDelete={handleDelete}
-            />
-        </div>
+        <>
+            {error && <p className="text text-danger">{error}</p>}
+            {isLoading && <div className="spinner-border"></div>}
+
+            <div className="container-sm">
+                <button
+                    className="btn btn-primary mb-3"
+                    onClick={() => addUser()}>
+                    Add User
+                </button>
+
+                <ul className="list-group">
+                    {users.map((user) => (
+                        <li
+                            key={user.id}
+                            className="list-group-item d-flex justify-content-between">
+                            {user.name}
+
+                            <div>
+                                <button
+                                    className="btn btn-outline-secondary mx-3"
+                                    onClick={() => updateUser(user)}>
+                                    Update
+                                </button>
+                                <button
+                                    className="btn btn-outline-danger"
+                                    onClick={() => deleteUser(user)}>
+                                    Delete
+                                </button>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </>
     );
 };
 
